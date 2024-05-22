@@ -1,6 +1,7 @@
-import scipy as sc
+import numpy as np 
 import matplotlib.pyplot as plt
 import pandas as pd
+import scipy as sc
 from scipy.stats import fisher_exact
 from scipy.stats import hypergeom
 from scipy.stats import norm
@@ -35,28 +36,37 @@ def pmfPoisson(x):
     return x    
 
 
+# Binomial dist rates of death
 n = 31000
 k1 = 63
 k2 = 39
 p1 = k1/n
 p2 = k2/n
-
 x1, result1 = pmfBinomial(n, k1, p1)
 x2, result2 = pmfBinomial(n, k2, p2)
-
 x3, density3 = pdfBinomial(x1,result1,100)
 x4, density4 = pdfBinomial(x2,result2,100)
 
-plt.plot(x1, result1,  color="black", linestyle="dashed", linewidth=1.0)
-plt.plot(x2, result2,  color="blue" , linestyle="dashed", linewidth=1.0)
-plt.plot(x3, density3, color="black", linestyle="dashed", linewidth=1.0)
-plt.plot(x4, density4, color="blue" , linestyle="dashed", linewidth=1.0)
-plt.show()
+# hypergeometric p-value
+N = 62000
+K = 31000
+n = 102
+x = 39
+resHyp_tTest = sc.stats.hypergeom.pmf(x, N, K, n)  # tTest(T=x)
+resHyp_pvalue = sc.stats.hypergeom.cdf(x, N, K, n) # sum(tTest(T=0,..,x))  
+print("T test hypergeom  p_value = ",resHyp_pvalue)
 
-res = fisher_exact([[39, 63], [30961, 30937]], alternative='less')
-print(res.statistic)
-print(res.pvalue)
-print(norm.cdf(-3.0268))
+# fisher exact p-value
+z = (x/K-(n-x)/K)   # Complete this formula
+z = -3.0268
+resFisher = fisher_exact([[39, 63], [30961, 30937]], alternative='less')
+#print("Fisher statistic = ",resFisher.statistic)
+print("Fisher exact      p-value = ",resFisher.pvalue)
+
+# z-test Normal Dist gives p-value with cdf|-inf to z
+resN_pvalue = sc.stats.norm.cdf(z)
+print("Z-test Normal     p-value = ",resN_pvalue)
+
 
 
 
@@ -65,6 +75,12 @@ print(norm.cdf(-3.0268))
 
 
 '''
+plt.plot(x1, result1,  color="black", linestyle="dashed", linewidth=1.0)
+plt.plot(x2, result2,  color="blue" , linestyle="dashed", linewidth=1.0)
+plt.plot(x3, density3, color="black", linestyle="dashed", linewidth=1.0)
+plt.plot(x4, density4, color="blue" , linestyle="dashed", linewidth=1.0)
+plt.show()
+
 df1 = pd.DataFrame([x1, result1])
 df2 = pd.DataFrame([x2, result2])
 df3 = pd.DataFrame([x3, density3])
@@ -80,5 +96,3 @@ df4.columns=['x','D']
 df = pd.concat([df1, df2, df3,df4], axis=1)
 df.to_excel('pdfBinary1.xlsx')
 '''
-
-
