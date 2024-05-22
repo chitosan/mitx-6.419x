@@ -77,6 +77,16 @@ print("T-test t-stats = ", t_stats)    # like z-value boundary for t-test
 print("T-test p-value = ", p_value)
 print("")
 
+# Likelyhood test and Neyman Pearson Lemma
+ll_H0 = sc.stats.binom.pmf(39,31000,102/62000)*\
+        sc.stats.binom.pmf(63,31000,102/62000)
+ll_HA = sc.stats.binom.pmf(39,31000, 39/31000)*\
+        sc.stats.binom.pmf(63,31000,63/31000)
+Lambda = -2 * math.log(ll_H0/ll_HA)
+print(Lambda)
+
+
+
 
 
 
