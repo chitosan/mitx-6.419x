@@ -66,7 +66,16 @@ print("Fisher exact      p-value = ",resFisher.pvalue)
 # z-test Normal Dist gives p-value with cdf|-inf to z
 resN_pvalue = sc.stats.norm.cdf(z)
 print("Z-test Normal     p-value = ",resN_pvalue)
+print("")
 
+# t-test 
+print("Sleeping pill problem")
+X = np.array([ 0.9, -0.9, 4.3, 2.9, 1.2, 3. , 2.7, 0.6, 3.6, -0.5])
+t_stats,p_value = sc.stats.ttest_1samp(X, popmean=0)
+p_value=p_value/2
+print("T-test t-stats = ", t_stats)    # like z-value boundary for t-test
+print("T-test p-value = ", p_value)
+print("")
 
 
 
