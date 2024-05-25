@@ -1,4 +1,6 @@
 import matplotlib.pyplot as plt
+
+import matplotlib.pyplot as plt
 import numpy as np
 import scipy as sc
 import scipy.stats as st
@@ -6,7 +8,7 @@ import scipy.stats as st
 def bvar(x):
     N = len(x)
     u = np.average(x)
-    d = abs(x - u) ** 2.
+    d = (x - u) ** 2.
     var = N * np.average(d) / (N - 1)
     return var
 
@@ -14,10 +16,16 @@ def cov(x, y):
     N = len(x)
     ux = np.average(x)
     uy = np.average(y)
-    dx = abs(x - ux)
-    dy = abs(y - uy)
+    dx = (x - ux)
+    dy = (y - uy)
+    s2x = bvar(x)
+    s2y = bvar(y)
+    # Std. Deviation
+    stx = s2x ** 0.5
+    sty = s2y ** 0.5
     var = N * np.average(dx*dy) / (N - 1)
-    return var
+    corr = var/(stx*sty)
+    return var, corr
 
 
 Xs = np.array([0.0339, 0.0423, 0.213, 0.257, 0.273, 0.273, 0.450, 0.503, 0.503, \
@@ -36,13 +44,15 @@ s2y = bvar(Ys)
 # Std. Deviation
 stx = s2x**0.5
 sty = s2y**0.5
-# Covariance (Xs, Ys)
-cxy = cov(Xs,Ys)
+# Covariance (Xs, Ys), Correlation (Xs, Ys)
+cxy, rxy = cov(Xs,Ys)
 
 print("E X_, Y_ : ",ux,uy)
 print("Var X, Y : ",s2x,s2y)
 print("Std X, Y : ",stx,sty)
-print("Cov(X, Y): ",cxy)
+print("Cov(X,Y), Corr(X,Y): ",cxy, rxy)
 
+# Create the scatter plot, Xs and Ys are two numpy arrays of the same length
 plt.scatter(Xs, Ys)
+# Display the plot you just created.
 plt.show()
