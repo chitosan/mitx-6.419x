@@ -1,9 +1,9 @@
 import matplotlib.pyplot as plt
-
-import matplotlib.pyplot as plt
 import numpy as np
+from sklearn.linear_model import LinearRegression
 import scipy as sc
 import scipy.stats as st
+from scipy.optimize import curve_fit
 
 def bvar(x):
     N = len(x)
@@ -50,7 +50,22 @@ cxy, rxy = cov(Xs,Ys)
 print("E X_, Y_ : ",ux,uy)
 print("Var X, Y : ",s2x,s2y)
 print("Std X, Y : ",stx,sty)
-print("Cov(X,Y), Corr(X,Y): ",cxy, rxy)
+print("Cov(X,Y), Corr(X,Y): ",cxy, rxy, rxy**2)
+print("")
+
+# Linear regression
+# ML regression Scikit-learn
+model = LinearRegression()
+Xr = Xs.reshape(-1,1)
+model.fit(Xr, Ys)
+r_sq = model.score(Xr, Ys)
+print(f"coefficient of determination R^2: {r_sq}")
+print(f"intercept B0: {model.intercept_}")
+print(f"slope     B1: {model.coef_[0]}")
+
+# Math regression, scipy
+slope, intercept, r, p, se = st.linregress(Xs, Ys)
+print(slope,intercept,r**2)
 
 # Create the scatter plot, Xs and Ys are two numpy arrays of the same length
 plt.scatter(Xs, Ys)
